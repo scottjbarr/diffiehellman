@@ -24,27 +24,18 @@ func TestDH(t *testing.T) {
 	//
 	// choose a large prime for p (not too large though!)
 	pv := "47055833459"
-	// pv := "46810093859"
 	p := new(big.Int)
 	p.SetString(pv, 10)
-
-	// p := newKey().X
 
 	// choose a large prime for g. Some numbers will result in a zero
 	// for A (below)
 	gv := "46810093859"
-	// gv := "47055833459"
 	g := new(big.Int)
 	g.SetString(gv, 10)
-	// g := newKey().X
 
 	// this pair can be publicly shared
 	pair := NewPair(p, g)
 
-	// k := newKey()
-	// aliceNumber := k.X
-
-	// av := "4"
 	av := "1299553"
 	aliceNumber := new(big.Int)
 	aliceNumber.SetString(av, 10)
@@ -72,11 +63,11 @@ func TestDH(t *testing.T) {
 	if !reflect.DeepEqual(*aliceKey, *bobKey) {
 		t.Errorf("%v and %v should be equal", *aliceKey, *bobKey)
 	}
-
 }
 
 func newKey() *ecdsa.PrivateKey {
 	r := rand.Reader
+
 	k, err := ecdsa.GenerateKey(elliptic.P256(), r)
 	if err != nil {
 		panic(err)
