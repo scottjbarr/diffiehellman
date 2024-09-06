@@ -6,6 +6,8 @@ import (
 	"math/big"
 )
 
+const ()
+
 func main() {
 	// From https://datatracker.ietf.org/doc/html/rfc3526#section-3
 	//
@@ -29,7 +31,8 @@ func main() {
 	//    DE2BCBF6 95581718 3995497C EA956AE5 15D22618 98FA0510
 	//    15728E5A 8AACAA68 FFFFFFFF FFFFFFFF
 
-	base := 36
+	const randomBitLen = int64(1024)
+	const base = 36
 
 	// Alice and Bob agree to use group 14 from RFC-3526
 	p, _ := new(big.Int).SetString("FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD129024E088A67CC74020BBEA63B139B22514A08798E3404DDEF9519B3CD3A431B302B0A6DF25F14374FE1356D6D51C245E485B576625E7EC6F44C42E9A637ED6B0BFF5CB6F406B7EDEE386BFB5A899FA5AE9F24117C4B1FE649286651ECE45B3DC2007CB8A163BF0598DA48361C55D39A69163FA8FD24CF5F83655D23DCA3AD961C62F356208552BB9ED529077096966D670C354E4ABC9804F1746C08CA18217C32905E462E36CE3BE39E772C180E86039B2783A2EC07A28FB5C55DF06F4C52C9DE2BCBF6955817183995497CEA956AE515D2261898FA051015728E5A8AACAA68FFFFFFFFFFFFFFFF", 16)
@@ -39,24 +42,24 @@ func main() {
 	fmt.Printf("g = %v\n", g.Text(base))
 
 	// Alice chooses a secret integer, then sends Bob A = g^a mod p
-	a, err := newRandomBigInt()
+	a, err := newRandomBigInt(randomBitLen)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("Alice choses secret int\n  %s\n", a.Text(base))
+	fmt.Printf("Alice choses secret bits=%v int\n  %s\n", a.BitLen(), a.Text(base))
 
 	A := powmod(g, a, p)
 
 	fmt.Printf("Alice sends Bob the result of g^a mod p\n  %s\n", A.Text(base))
 
 	// Bob chooses a secret integer, then sends Alice B = g^b mod p
-	b, err := newRandomBigInt()
+	b, err := newRandomBigInt(randomBitLen)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("Bob choses secret int\n  %s\n", a.Text(base))
+	fmt.Printf("Bob choses secret bits=%v int\n  %s\n", b.BitLen(), b.Text(base))
 
 	B := powmod(g, b, p)
 
@@ -81,10 +84,10 @@ func powmod(a, b, p *big.Int) *big.Int {
 	return new(big.Int).Exp(a, b, p)
 }
 
-func newRandomBigInt() (*big.Int, error) {
+func newRandomBigInt(bitLen int64) (*big.Int, error) {
 	// Max random value, a 130-bits integer, i.e 2^130 - 1
 	max := new(big.Int)
-	max.Exp(big.NewInt(2), big.NewInt(1024), nil).Sub(max, big.NewInt(1))
+	max.Exp(big.NewInt(2), big.NewInt(bitLen), nil).Sub(max, big.NewInt(1))
 
 	// Generate cryptographically strong pseudo-random between 0 - max
 	return rand.Int(rand.Reader, max)
