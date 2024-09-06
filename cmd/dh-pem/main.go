@@ -69,9 +69,6 @@ func main() {
 	bobKey := powmod(A, b, p)
 
 	// Alice and Bob now share a secret
-	// fmt.Printf("Alice computes key\n  %v\n", aliceKey.Int64())
-	// fmt.Printf("Bob computes key\n  %v\n", bobKey.Int64())
-
 	fmt.Printf("Alice computes key\n  %v\n", aliceKey.Text(base))
 	fmt.Printf("Bob computes key\n  %v\n", bobKey.Text(base))
 
@@ -81,16 +78,6 @@ func main() {
 }
 
 func powmod(a, b, p *big.Int) *big.Int {
-	// a^b
-	// fmt.Printf("exponent 0x%s ^ 0x%s\n", a.Text(base), b.Text(base))
-	// e := new(big.Int)
-	// e.Exp(a, b, nil)
-
-	// // e mod p
-	// fmt.Printf("mod\n")
-	// n := new(big.Int)
-	// return n.Mod(e, p)
-
 	return new(big.Int).Exp(a, b, p)
 }
 
