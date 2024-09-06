@@ -42,11 +42,5 @@ func main() {
 }
 
 func powmod(a, b, p *big.Int) *big.Int {
-	// a^b
-	e := new(big.Int)
-	e.Exp(a, b, nil)
-
-	// e mod p
-	n := new(big.Int)
-	return n.Mod(e, p)
+	return new(big.Int).Exp(a, b, p)
 }
